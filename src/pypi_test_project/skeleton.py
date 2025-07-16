@@ -26,8 +26,8 @@ import sys
 
 from pypi_test_project import __version__
 
-__author__ = "shubhrajg"
-__copyright__ = "shubhrajg"
+__author__ = "shubhra-gadhwala"
+__copyright__ = "shubhra-gadhwala"
 __license__ = "MIT"
 
 _logger = logging.getLogger(__name__)

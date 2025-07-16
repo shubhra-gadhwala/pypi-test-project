@@ -2,8 +2,8 @@ import pytest
 
 from pypi_test_project.skeleton import fib, main
 
-__author__ = "shubhrajg"
-__copyright__ = "shubhrajg"
+__author__ = "shubhra-gadhwala"
+__copyright__ = "shubhra-gadhwala"
 __license__ = "MIT"
 
 

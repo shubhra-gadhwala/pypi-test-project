@@ -52,3 +52,10 @@ MANIFEST
 .venv*/
 .conda*/
 .python-version
+
+# env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

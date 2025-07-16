@@ -1,3 +1,3 @@
 # Contributors
 
-* shubhrajg [shubhrajg@weblineapps.com](mailto:shubhrajg@weblineapps.com)
+* shubhra-gadhwala [shubhrajg@weblineapps.com](mailto:shubhrajg@weblineapps.com)
