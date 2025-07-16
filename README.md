@@ -1,27 +1,37 @@
-<!-- These are examples of badges you might want to add to your README:
-     please update the URLs accordingly
+# PyPI Setup to use with GitHub Actions (without using PyPI token)
+[![Coverage Status](https://coveralls.io/repos/github/shubhra-gadhwala/pypi-test-project/badge.svg?branch=main)](https://coveralls.io/github/shubhra-gadhwala/pypi-test-project?branch=main)
+## PyPI Account Setup
+1. Create a PyPI account in [https://test.pypi.org/](https://test.pypi.org/) for test and the [https://pypi.org/](https://pypi.org/) for production.
+2. Set MFA for the account (required for pushing to PyPI).
+3. Goto [https://test.pypi.org/manage/account/publishing/](https://test.pypi.org/manage/account/publishing/) and **Add a new pending publisher**.
+4. Set the **PyPI Project Name** to the one set in the `setup.cfg` file.
 
-[![Built Status](https://api.cirrus-ci.com/github/<USER>/pypi-test-project.svg?branch=main)](https://cirrus-ci.com/github/<USER>/pypi-test-project)
-[![ReadTheDocs](https://readthedocs.org/projects/pypi-test-project/badge/?version=latest)](https://pypi-test-project.readthedocs.io/en/stable/)
-[![Coveralls](https://img.shields.io/coveralls/github/<USER>/pypi-test-project/main.svg)](https://coveralls.io/r/<USER>/pypi-test-project)
-[![PyPI-Server](https://img.shields.io/pypi/v/pypi-test-project.svg)](https://pypi.org/project/pypi-test-project/)
-[![Conda-Forge](https://img.shields.io/conda/vn/conda-forge/pypi-test-project.svg)](https://anaconda.org/conda-forge/pypi-test-project)
-[![Monthly Downloads](https://pepy.tech/badge/pypi-test-project/month)](https://pepy.tech/project/pypi-test-project)
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/pypi-test-project)
--->
+    ![1752674537491](image/pypi_deploy_steps/1752674537491.png)
 
-[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
+    - If the name is already taken, than you would need a new name for the project. Create a new name and update the same in the `setup.cfg` file.
 
-# pypi-test-project
+        ```
+        [metadata]
+        name = <new-project-name>
+        ```
+5. Fill in the rest of the details and click on **Add** button.
+6. Same steps need to be followed for the production PyPI account.
 
-> Add a short description here!
+---
 
-A longer description of your project goes here...
+## Github Project Setup
+1. Create and configure stage and production environments in the github projects:
 
-
-<!-- pyscaffold-notes -->
-
-## Note
-
-This project has been set up using PyScaffold 4.6. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
+    ![1752673935758](image/pypi_deploy_steps/1752673935758.png)
+2. Create a new workflow file in the `.github/workflows` directory.
+    - Please refer the sample github workflow file provided.
+3. The sample workflow has the following steps:
+    - Prepare job: Runs static analysis, builds package distribution files
+    - Test job: Runs tests on multiple Python versions and platforms
+    - Finalize job: Aggregates test coverage reports
+        - Uses `coveralls` to create and aggregate the test coverage reports. Needs the repository to be public.
+        - Viewable on `https://coveralls.io/github/{YOUR_USERNAME}/{YOUR_GITHUB_PROJECT_NAME}`
+    - Publish job: Deploys to PyPI on version tags (e.g. v1.0.0)
+    - Publish-test job: Deploys to TestPyPI on pre-release tags (e.g. v1.0.0-alpha)
+4. The workflow is configured to run on `main` branch and on version tags (e.g. v1.0.0).
+    - Which means when a new release is created along with a tag on GitHub UI, the workflow will automatically deploy the package to PyPI and TestPyPI.
