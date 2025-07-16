@@ -106,8 +106,12 @@ jobs:
     # Only run on version tags that are not pre-releases
     if: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') && !contains(github.ref, '-') }}
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pypi-test-project  # Replace with your package name
     permissions:
       contents: write
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -116,19 +120,19 @@ jobs:
         uses: actions/download-artifact@v4
         with: {name: python-distribution-files, path: dist/}
       - name: Publish Package to PyPI
-        env:
-          TWINE_REPOSITORY: pypi
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: pipx run tox -e publish
+        uses: pypa/gh-action-pypi-publish@release/v1
 
   publish-test:
     needs: finalize
     # Run on pre-release tags (containing a hyphen, e.g., v1.0.0-alpha)
     if: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') && contains(github.ref, '-') }}
     runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/pypi-test-project  # Replace with your package name
     permissions:
       contents: write
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -137,8 +141,6 @@ jobs:
         uses: actions/download-artifact@v4
         with: {name: python-distribution-files, path: dist/}
       - name: Publish Package to TestPyPI
-        env:
-          TWINE_REPOSITORY: testpypi
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
-        run: pipx run tox -e publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
